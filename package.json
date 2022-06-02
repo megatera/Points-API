@@ -1,0 +1,11 @@
+{
+  "name": "points-api",
+  "version": "1.0.0",
+  "description": "Track point transactions and balances",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Megan Nadkarni",
+  "license": "ISC"
+}
