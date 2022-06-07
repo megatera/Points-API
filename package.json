@@ -4,8 +4,25 @@
   "description": "Track point transactions and balances",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "jest --verbose"
   },
   "author": "Megan Nadkarni",
-  "license": "ISC"
+  "license": "ISC",
+  "jest": {
+    "globalSetup": "./jest-setup.js",
+    "globalTeardown": "./jest-teardown.js",
+    "testEnvironment": "jest-environment-jsdom"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
+    "nodemon": "^2.0.16",
+    "regenerator-runtime": "^0.13.9",
+    "supertest": "^6.2.3"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }
