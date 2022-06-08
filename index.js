@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // transaction route
 app.post("/transaction", 
-  pointsController.addTransactions, 
+  pointsController.addTransaction, 
   (req, res) => {
     res.status(200).json(res.locals.newBalance);
 })

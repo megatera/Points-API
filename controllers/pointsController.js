@@ -10,7 +10,7 @@ pointsController.getBalances = (req, res, next) => {
   return next();
 }
 
-pointsController.addTransactions = (req, res, next) => {
+pointsController.addTransaction = (req, res, next) => {
   const { payer, points, timestamp } = req.body;
 
   // validate request parameters
@@ -42,7 +42,7 @@ pointsController.addTransactions = (req, res, next) => {
   transactions.push({ payer: payer, points: points, timestamp: timestamp });
   transactions.sort((a, b) => { return new Date(a.timestamp) - new Date(b.timestamp) });
 
-  // update balance
+  // update payer balance
   if (!balances[payer]) {
     balances[payer] = 0;
   }
@@ -55,9 +55,10 @@ pointsController.addTransactions = (req, res, next) => {
 }
 
 pointsController.spendPoints = (req, res, next) => {
-  let { points } = req.body;
+  let { points: targetSpend } = req.body;
 
-  if (points < 0 || isNaN(points)) {
+  // validate requested spend
+  if (targetSpend < 0 || isNaN(targetSpend)) {
     return next({
       log: "Express error handler caught in spend points controller. ERROR: Invalid points parameter. Expected points to be a number greater than 0.",
       status: 400,
@@ -65,14 +66,16 @@ pointsController.spendPoints = (req, res, next) => {
     })
   }
 
+  // consolidate transactions into array of points by age (oldest to newest)
   const pointsByAge = consolidatePoints(transactions);
 
+  // calculate total balance of points to determine if there are enough points to meet targetSpend
   const totalBalance = pointsByAge.reduce((total, entry) => { 
     total += entry.points;
     return total;
   }, 0);
 
-  if (totalBalance < points) {
+  if (totalBalance < targetSpend) {
     return next({
       log: "Express error handler caught in spend points controller. ERROR: Not enough points to spend.",
       status: 400,
@@ -82,21 +85,39 @@ pointsController.spendPoints = (req, res, next) => {
 
   res.locals.pointSummary = [];
   
-  // calculate point spend and push payer details to pointSummary and update transactions/balances
+  // loop through pointsByAge while there are still points that need to be spent
   let i = 0;
-  while (points > 0) {
-    if (pointsByAge[i].points > points) {
-      res.locals.pointSummary.push({ payer: pointsByAge[i].payer, points: points * -1 });
-      transactions.push({ payer: pointsByAge[i].payer, points: points * -1, timestamp: new Date().toISOString()});
-      balances[pointsByAge[i].payer] -= points;
-      points = 0;
+  while (targetSpend > 0) {
+    // if value of points in this pointsByAge entry is greater than or equal to targetSpend
+    if (pointsByAge[i].points >= targetSpend) {
+      // push payer detail and value of targetSpend to pointSummary
+      res.locals.pointSummary.push({ payer: pointsByAge[i].payer, points: targetSpend * -1 });
+
+      // update transactions array with deduction of targetSpend points
+      transactions.push({ payer: pointsByAge[i].payer, points: targetSpend * -1, timestamp: new Date().toISOString()});
+
+      // update payer balance with deduction of targetSpend points
+      balances[pointsByAge[i].payer] -= targetSpend;
+
+      // zero out targetSpend
+      targetSpend = 0;
     }
 
-    if (pointsByAge[i].points <= points) {
+    // if this entry of saved points is less than the targetSpend
+    if (pointsByAge[i].points < targetSpend) {
+      // push payer detail and value of the points in this pointsByAge entry to pointSummary
       res.locals.pointSummary.push({ payer: pointsByAge[i].payer, points: pointsByAge[i].points * -1 });
-      transactions.push({ payer: pointsByAge[i].payer, points: points * -1, timestamp: new Date().toISOString()});
+
+      // update transactions array with deduction of the points in this pointsByAge entry
+      transactions.push({ payer: pointsByAge[i].payer, points: pointsByAge[i].points * -1, timestamp: new Date().toISOString()});
+
+      // update payer balance with deduction of the points in this pointsByAge entry
       balances[pointsByAge[i].payer] -= pointsByAge[i].points;
-      points = points - pointsByAge[i].points;
+
+      // deduct the points in this pointsByAge entry from targetSpend
+      targetSpend -= pointsByAge[i].points;
+
+      // increment pointsByAge index
       i++;
     }
   }
