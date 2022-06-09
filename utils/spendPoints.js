@@ -1,8 +1,8 @@
 /*
-@description: calculate point expenditure (oldest first)
+@description: calculates point expenditure (oldest first)
 @param: array of points to spend sorted by age
 @param: target spend
-@return: summary array of point spend by paper (eg. [{ payer: payer1, points: -x }, { payer: payer2, points: -y }, ...}])
+@return: summary array of point spend by payer (eg. [{ payer: payer1, points: -x }, { payer: payer2, points: -y }, ...}])
 */
 
 const spendPoints = (pointsToSpend, targetSpend) => {
