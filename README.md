@@ -32,7 +32,7 @@ To spend points, send a POST request to the `/spend` endpoint with the following
 |  points   |  integer | number of points to spend; must be greater than 0  |
 
 Response:
-```{ payer1: -x points, payer2: -y points, payer3: -z points }```
+```[{ payer: payer1, points: -x }, { payer: payer2, points: -y }, { payer: payer3, points: -z }]```
 
 ## Example
 Add a series of transactions:
