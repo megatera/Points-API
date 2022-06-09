@@ -8,7 +8,7 @@
 ## Endpoints
 
 ### /transaction
-To add a transaction, send a POST request to the `/transaction` endpoint with the following parameters:
+To add a transaction, send a POST request to the `/transaction` endpoint with the following parameters in the body:
 | Parameter | Data Type| Description                                              |
 |-----------|----------|----------------------------------------------------------|
 |   payer   |  string  | name of payer                                            |
@@ -25,7 +25,7 @@ Response:
 ```{ payer1: balance, payer2: balance, payer3: balance }```
 
 ### /spend
-To spend points, send a POST request to the `/spend` endpoint with the following parameters:
+To spend points, send a POST request to the `/spend` endpoint with the following parameters in the body:
 
 | Parameter | Data Type| Description                                        |
 |-----------|----------|----------------------------------------------------|
