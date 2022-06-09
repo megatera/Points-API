@@ -95,7 +95,6 @@ pointsController.spendPoints = (req, res, next) => {
 
   res.locals.pointSummary = pointSummary;
   
-  console.log('transactions:', transactions);
   return next();
 }
 
