@@ -13,7 +13,7 @@ const consolidatePoints = (transactions) => {
     // if transaction is a debit and breaks even with the match, remove match from consolidated array
   // assumes transactions would not result in a negative payer balance
   for (let transaction of transactions) {
-    const match = consolidated.find((el) => el.payer === transaction.payer);
+    const match = consolidated.find((entry) => entry.payer === transaction.payer);
     if (match === undefined || transaction.points > 0) {
       consolidated.push({ ...transaction });
     }

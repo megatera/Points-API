@@ -56,6 +56,6 @@ Followed by a request for the resulting payer balances:<br>
 
 
 ## To Do
-- more efficient way to sort transactions?
-- decouple tests further
+- more efficient way to sort transactions? different data structure?
+- decouple tests further + add test cases for utils
 - could further modularize pointsController if transactions/balances not stored in memory

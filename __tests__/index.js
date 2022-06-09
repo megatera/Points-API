@@ -1,5 +1,5 @@
 const request = require('supertest');
-const server = 'http://localhost:3000'
+const server = 'http://localhost:3000';
 
 describe('POST \'/transaction\'', () => {
   it('should add a transaction for a specific payer and date', async () => {
