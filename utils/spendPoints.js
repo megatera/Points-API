@@ -1,6 +1,6 @@
 /*
-@description: calculates point expenditure (oldest first)
-@param: array of points to spend sorted by age
+@description: calculates point expenditure
+@param: sorted array of points to spend in order of which to spend first (ie. oldest)
 @param: target spend
 @return: summary array of point spend by payer (eg. [{ payer: payer1, points: -x }, { payer: payer2, points: -y }, ...}])
 */
